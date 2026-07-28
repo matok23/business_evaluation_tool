@@ -15,5 +15,9 @@ export interface ApiDefinition {
     show: typeof routes['businesses.show']
     delete: typeof routes['businesses.delete']
     create: typeof routes['businesses.create']
+    update: typeof routes['businesses.update']
+  }
+  data: {
+    industries: typeof routes['data.industries']
   }
 }

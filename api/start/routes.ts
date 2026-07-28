@@ -29,6 +29,13 @@ router
     router.get('/', [controllers.Businesses, 'show']);
     router.get('/:id/delete', [controllers.Businesses, 'delete']);
     router.post('/create', [controllers.Businesses, 'create']);
+    router.patch('/:id/update', [controllers.Businesses, 'update']);
   })
   .prefix('business')
   .use(middleware.auth());
+
+router
+  .group(() => {
+    router.get('/industries', [controllers.Data, 'industries']);
+  })
+  .prefix('data');

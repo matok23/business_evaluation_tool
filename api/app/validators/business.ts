@@ -60,6 +60,8 @@ export const createBusinessSchema = vine.object({
 
 export const createBusinessValidator = vine.create(createBusinessSchema);
 
+export const updateBusinessValidator = vine.create(createBusinessValidator.schema.partial());
+
 export type CreateBusinessPayload = Infer<typeof createBusinessSchema>;
 
 export type CreateBusinessRecordPayload = CreateBusinessPayload & {

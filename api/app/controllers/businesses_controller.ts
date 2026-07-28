@@ -1,5 +1,5 @@
 import Business from '#models/business';
-import { createBusinessValidator } from '#validators/business';
+import { createBusinessValidator, updateBusinessValidator } from '#validators/business';
 import type { HttpContext } from '@adonisjs/core/http';
 
 export default class BusinessesController {
@@ -7,7 +7,9 @@ export default class BusinessesController {
     const user = auth.getUserOrFail();
     const businesses = await user.related('businesses').query();
 
-    return businesses;
+    return {
+      data: businesses
+    };
   }
 
   async create({ request, auth, response }: HttpContext) {
@@ -19,11 +21,23 @@ export default class BusinessesController {
     return response.created(business);
   }
 
-  async edit() {
+  async update({ auth, request, response, params }: HttpContext) {
+    const user = auth.getUserOrFail();
 
+    const payload = await request.validateUsing(updateBusinessValidator);
+
+    const business = await Business.query()
+      .where('id', params.id)
+      .where('ownerId', user.id)
+      .firstOrFail();
+
+    business.merge(payload);
+    await business.save();
+
+    return response.ok(business);
   }
 
-  async delete({ response, auth, params }: HttpContext) {
+  async delete({ auth, params }: HttpContext) {
     const user = auth.getUserOrFail();
     const business = await Business
       .query()
@@ -33,7 +47,9 @@ export default class BusinessesController {
 
     await business.delete();
 
-    return response.ok({});
+    return {
+      message: 'Deleted successfully',
+    };
   }
 
   async reevaluate() {
