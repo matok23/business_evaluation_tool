@@ -8,14 +8,12 @@ export interface ApiDefinition {
     }
     accessTokens: {
       store: typeof routes['auth.access_tokens.store']
+      destroy: typeof routes['auth.access_tokens.destroy']
     }
   }
-  profile: {
-    profile: {
-      show: typeof routes['profile.profile.show']
-    }
-    accessTokens: {
-      destroy: typeof routes['profile.access_tokens.destroy']
-    }
+  businesses: {
+    show: typeof routes['businesses.show']
+    delete: typeof routes['businesses.delete']
+    create: typeof routes['businesses.create']
   }
 }

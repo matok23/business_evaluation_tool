@@ -7,7 +7,7 @@ import Valuation from './valuation.ts';
 
 export default class Business extends BusinessSchema {
   @belongsTo(() => User, {
-    foreignKey: 'owner_id'
+    foreignKey: 'ownerId'
   })
   declare owner: BelongsTo<typeof User>;
 

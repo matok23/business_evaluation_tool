@@ -20,7 +20,7 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   }
 
   @hasMany(() => Business, {
-    foreignKey: 'owner_id'
+    foreignKey: 'ownerId'
   })
-  declare businenesses: HasMany<typeof Business>;
+  declare businesses: HasMany<typeof Business>;
 }

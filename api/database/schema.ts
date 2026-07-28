@@ -36,13 +36,13 @@ export class BusinessSchema extends BaseModel {
   static $columns = ['annualRevenue', 'cash', 'createdAt', 'ebitda', 'employeeCount', 'id', 'industryId', 'interestBearingDebt', 'largestCustomerRevenuePercent', 'name', 'ownerId', 'recurringRevenuePercent', 'revenueGrowthPercent', 'updatedAt', 'yearsInBusiness'] as const
   $columns = BusinessSchema.$columns
   @column()
-  declare annualRevenue: string
+  declare annualRevenue: number
   @column()
-  declare cash: string
+  declare cash: number
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
-  declare ebitda: string
+  declare ebitda: number
   @column()
   declare employeeCount: number
   @column({ isPrimary: true })
@@ -50,17 +50,17 @@ export class BusinessSchema extends BaseModel {
   @column()
   declare industryId: number
   @column()
-  declare interestBearingDebt: string
+  declare interestBearingDebt: number
   @column()
-  declare largestCustomerRevenuePercent: string
+  declare largestCustomerRevenuePercent: number
   @column()
-  declare name: string | null
+  declare name: string
   @column()
   declare ownerId: number
   @column()
-  declare recurringRevenuePercent: string
+  declare recurringRevenuePercent: number
   @column()
-  declare revenueGrowthPercent: string
+  declare revenueGrowthPercent: number
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()

@@ -7,31 +7,28 @@
 |
 */
 
-import { middleware } from '#start/kernel'
-import router from '@adonisjs/core/services/router'
-import { controllers } from '#generated/controllers'
+import { middleware } from '#start/kernel';
+import router from '@adonisjs/core/services/router';
+import { controllers } from '#generated/controllers';
 
 router.get('/', () => {
-  return { hello: 'world' }
-})
+  return { hello: 'world' };
+});
 
 router
   .group(() => {
-    router
-      .group(() => {
-        router.post('signup', [controllers.NewAccount, 'store'])
-        router.post('login', [controllers.AccessTokens, 'store'])
-      })
-      .prefix('auth')
-      .as('auth')
-
-    router
-      .group(() => {
-        router.get('profile', [controllers.Profile, 'show'])
-        router.post('logout', [controllers.AccessTokens, 'destroy'])
-      })
-      .prefix('account')
-      .as('profile')
-      .use(middleware.auth())
+    router.post('register', [controllers.NewAccount, 'store']);
+    router.post('login', [controllers.AccessTokens, 'store']);
+    router.get('logout', [controllers.AccessTokens, 'destroy']);
   })
-  .prefix('/api/v1')
+  .prefix('auth')
+  .as('auth');
+
+router
+  .group(() => {
+    router.get('/', [controllers.Businesses, 'show']);
+    router.get('/:id/delete', [controllers.Businesses, 'delete']);
+    router.post('/create', [controllers.Businesses, 'create']);
+  })
+  .prefix('business')
+  .use(middleware.auth());
