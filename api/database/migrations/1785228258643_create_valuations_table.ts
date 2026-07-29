@@ -8,8 +8,8 @@ export default class extends BaseSchema {
       table.increments('id');
       table.integer('business_id').unsigned().references('id').inTable('businesses').onDelete('CASCADE').notNullable();
 
-      table.float('low').notNullable();
-      table.float('high').notNullable();
+      table.float('lower').notNullable();
+      table.float('upper').notNullable();
 
       table.timestamp('created_at');
       table.timestamp('updated_at');

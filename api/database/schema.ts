@@ -100,18 +100,18 @@ export class UserSchema extends BaseModel {
 }
 
 export class ValuationSchema extends BaseModel {
-  static $columns = ['businessId', 'createdAt', 'high', 'id', 'low', 'updatedAt'] as const
+  static $columns = ['businessId', 'createdAt', 'id', 'lower', 'updatedAt', 'upper'] as const
   $columns = ValuationSchema.$columns
   @column()
   declare businessId: number
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
-  @column()
-  declare high: number
   @column({ isPrimary: true })
   declare id: number
   @column()
-  declare low: number
+  declare lower: number
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare upper: number
 }

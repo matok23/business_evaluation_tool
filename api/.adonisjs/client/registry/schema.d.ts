@@ -67,6 +67,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/businesses_controller').default['delete']>>>
     }
   }
+  'businesses.reevaluate': {
+    methods: ["GET","HEAD"]
+    pattern: '/business/:id/evaluate'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/businesses_controller').default['reevaluate']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/businesses_controller').default['reevaluate']>>>
+    }
+  }
   'businesses.create': {
     methods: ["POST"]
     pattern: '/business/create'

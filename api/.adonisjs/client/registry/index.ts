@@ -36,6 +36,12 @@ const routes = {
     tokens: [{"old":"/business/:id/delete","type":0,"val":"business","end":""},{"old":"/business/:id/delete","type":1,"val":"id","end":""},{"old":"/business/:id/delete","type":0,"val":"delete","end":""}],
     types: placeholder as Registry['businesses.delete']['types'],
   },
+  'businesses.reevaluate': {
+    methods: ["GET","HEAD"],
+    pattern: '/business/:id/evaluate',
+    tokens: [{"old":"/business/:id/evaluate","type":0,"val":"business","end":""},{"old":"/business/:id/evaluate","type":1,"val":"id","end":""},{"old":"/business/:id/evaluate","type":0,"val":"evaluate","end":""}],
+    types: placeholder as Registry['businesses.reevaluate']['types'],
+  },
   'businesses.create': {
     methods: ["POST"],
     pattern: '/business/create',

@@ -28,6 +28,7 @@ router
   .group(() => {
     router.get('/', [controllers.Businesses, 'show']);
     router.get('/:id/delete', [controllers.Businesses, 'delete']);
+    router.get('/:id/evaluate', [controllers.Businesses, 'reevaluate']);
     router.post('/create', [controllers.Businesses, 'create']);
     router.patch('/:id/update', [controllers.Businesses, 'update']);
   })

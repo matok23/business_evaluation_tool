@@ -9,6 +9,7 @@ export type ScannedRoutes = {
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'businesses.show': { paramsTuple?: []; params?: {} }
     'businesses.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'businesses.reevaluate': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'businesses.create': { paramsTuple?: []; params?: {} }
     'businesses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'data.industries': { paramsTuple?: []; params?: {} }
@@ -17,12 +18,14 @@ export type ScannedRoutes = {
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'businesses.show': { paramsTuple?: []; params?: {} }
     'businesses.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'businesses.reevaluate': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'data.industries': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'auth.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'businesses.show': { paramsTuple?: []; params?: {} }
     'businesses.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'businesses.reevaluate': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'data.industries': { paramsTuple?: []; params?: {} }
   }
   POST: {
