@@ -1,5 +1,7 @@
-import app from '@adonisjs/core/services/app'
-import { defineConfig } from '@adonisjs/cors'
+import env from '#start/env';
+import app from '@adonisjs/core/services/app';
+import { defineConfig } from '@adonisjs/cors';
+
 
 /**
  * Configuration options to tweak the CORS policy. The following
@@ -7,6 +9,15 @@ import { defineConfig } from '@adonisjs/cors'
  *
  * https://docs.adonisjs.com/guides/security/cors
  */
+
+const corsOrigins =
+  env.get('CORS_ORIGINS') ?? 'http://localhost:5173';
+
+const allowedOrigins = corsOrigins
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter((origin) => origin.length > 0);
+
 const corsConfig = defineConfig({
   /**
    * Enable or disable CORS handling globally.
@@ -18,7 +29,7 @@ const corsConfig = defineConfig({
    * In production, keep an explicit allowlist (empty by default, so no
    * cross-origin browser access is allowed until configured).
    */
-  origin: app.inDev ? true : [],
+  origin: app.inDev ? true : allowedOrigins,
 
   /**
    * HTTP methods accepted for cross-origin requests.
@@ -45,6 +56,6 @@ const corsConfig = defineConfig({
    * Cache CORS preflight response for N seconds.
    */
   maxAge: 90,
-})
+});
 
-export default corsConfig
+export default corsConfig;

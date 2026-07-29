@@ -33,7 +33,7 @@ export class ApiError extends Error {
 
 export const apiClient = axios.create({
   baseURL:
-    import.meta.env.API_URL ??
+    import.meta.env.VITE_API_URL ??
     'http://localhost:3333',
 
   headers: {
