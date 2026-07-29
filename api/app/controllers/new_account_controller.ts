@@ -1,18 +1,15 @@
 import User from '#models/user';
 import { registerValidator } from '#validators/user';
 import type { HttpContext } from '@adonisjs/core/http';
-import UserTransformer from '#transformers/user_transformer';
 
 export default class NewAccountController {
-  async store({ request, serialize }: HttpContext) {
+  async store({ request }: HttpContext) {
     const { email, password } = await request.validateUsing(registerValidator);
 
-    const user = await User.create({ email, password });
-    const token = await User.accessTokens.create(user);
+    await User.create({ email, password });
 
-    return serialize({
-      user: UserTransformer.transform(user),
-      token: token.value!.release(),
-    });
+    return {
+      message: 'Registration successful'
+    };
   }
 }
