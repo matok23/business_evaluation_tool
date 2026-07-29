@@ -14,6 +14,7 @@ import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import NewBusinessPage from './pages/NewBusinessPage';
 import RegisterPage from './pages/RegisterPage';
+import EditBusinessPage from './pages/EditBusinessPage';
 
 export default function App() {
   return (
@@ -40,6 +41,11 @@ export default function App() {
           <Route
             path="/businesses/new"
             element={<NewBusinessPage />}
+          />
+
+          <Route
+            path="/businesses/:id/edit"
+            element={<EditBusinessPage />}
           />
         </Route>
       </Route>

@@ -13,6 +13,7 @@ export interface ApiDefinition {
   }
   businesses: {
     show: typeof routes['businesses.show']
+    find: typeof routes['businesses.find']
     delete: typeof routes['businesses.delete']
     reevaluate: typeof routes['businesses.reevaluate']
     create: typeof routes['businesses.create']

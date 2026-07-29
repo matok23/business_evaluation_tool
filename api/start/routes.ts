@@ -27,6 +27,7 @@ router
 router
   .group(() => {
     router.get('/', [controllers.Businesses, 'show']);
+    router.get('/:id', [controllers.Businesses, 'find']);
     router.get('/:id/delete', [controllers.Businesses, 'delete']);
     router.get('/:id/evaluate', [controllers.Businesses, 'reevaluate']);
     router.post('/create', [controllers.Businesses, 'create']);
@@ -39,4 +40,4 @@ router
   .group(() => {
     router.get('/industries', [controllers.Data, 'industries']);
   })
-  .prefix('data');
+  .prefix('assets');

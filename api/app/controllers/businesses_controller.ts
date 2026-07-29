@@ -22,11 +22,24 @@ export default class BusinessesController {
     const businesses = await user
       .related('businesses')
       .query()
-      .preload('valuations');
+      .preload('valuations', (query) => {
+        query.orderBy('createdAt', 'asc');
+      });
 
     return {
       data: businesses
     };
+  }
+
+  async find({ auth, params, response }: HttpContext) {
+    const user = auth.getUserOrFail();
+    const business = await Business
+      .query()
+      .where('id', params.id)
+      .where('ownerId', user.id)
+      .firstOrFail();
+
+    return response.ok(business);
   }
 
   async create({ request, auth, response }: HttpContext) {
@@ -47,7 +60,9 @@ export default class BusinessesController {
       await business.refresh();
 
       await createValuation(business);
-      await business.load('valuations');
+      await business.load('valuations', (query) => {
+        query.orderBy('createdAt', 'asc');
+      });
 
       return business;
     });
@@ -69,7 +84,9 @@ export default class BusinessesController {
 
       await business.save();
       await createValuation(business);
-      await business.load('valuations');
+      await business.load('valuations', (query) => {
+        query.orderBy('createdAt', 'asc');
+      });
 
       return business;
     });
@@ -97,11 +114,13 @@ export default class BusinessesController {
     const business = await Business
       .query()
       .where('id', params.id)
-      .where('owner_id', user.id)
+      .where('ownerId', user.id)
       .firstOrFail();
 
     await createValuation(business);
-    await business.load('valuations');
+    await business.load('valuations', (query) => {
+      query.orderBy('createdAt', 'asc');
+    });
 
     return response.ok(business);
   }

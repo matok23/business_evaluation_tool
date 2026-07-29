@@ -6,48 +6,53 @@ import {
 
 import {
     Link,
+    Navigate,
     useNavigate,
+    useParams,
 } from 'react-router';
 
-import { businessService } from '../api/business_service';
 import { industryService } from '../api/asset_service';
-
-import type { CreateBusinessPayload } from '../contracts/business';
+import { useBusiness } from '../hooks/useBusinessSingle';
 import type { Industry } from '../contracts/business';
+import type { UpdateBusinessPayload } from '../contracts/business';
 
 type BusinessFormState = {
     name: string;
     industryId: string;
-
     annualRevenue: string;
     ebitda: string;
     cash: string;
     interestBearingDebt: string;
-
     yearsInBusiness: string;
     employeeCount: string;
-
     revenueGrowthPercent: string;
     recurringRevenuePercent: string;
     largestCustomerRevenuePercent: string;
 };
 
-const initialForm: BusinessFormState = {
+const emptyForm: BusinessFormState = {
     name: '',
     industryId: '',
-
     annualRevenue: '',
     ebitda: '',
-    cash: '0',
-    interestBearingDebt: '0',
-
+    cash: '',
+    interestBearingDebt: '',
     yearsInBusiness: '',
     employeeCount: '',
-
-    revenueGrowthPercent: '0',
-    recurringRevenuePercent: '0',
-    largestCustomerRevenuePercent: '0',
+    revenueGrowthPercent: '',
+    recurringRevenuePercent: '',
+    largestCustomerRevenuePercent: '',
 };
+
+function toInputValue(
+    value: string | number | null | undefined
+): string {
+    if (value === null || value === undefined) {
+        return '';
+    }
+
+    return String(value);
+}
 
 function getErrorMessage(error: unknown): string {
     return error instanceof Error
@@ -55,11 +60,24 @@ function getErrorMessage(error: unknown): string {
         : 'Something went wrong';
 }
 
-export default function NewBusinessPage() {
+export default function EditBusinessPage() {
+    const { id } = useParams();
     const navigate = useNavigate();
 
+    const businessId = Number(id);
+    const isValidBusinessId =
+        Number.isInteger(businessId) && businessId > 0;
+
+    const {
+        business,
+        isLoading,
+        isSaving,
+        error: businessError,
+        updateBusiness,
+    } = useBusiness(businessId);
+
     const [form, setForm] =
-        useState<BusinessFormState>(initialForm);
+        useState<BusinessFormState>(emptyForm);
 
     const [industries, setIndustries] =
         useState<Industry[]>([]);
@@ -67,15 +85,15 @@ export default function NewBusinessPage() {
     const [isLoadingIndustries, setIsLoadingIndustries] =
         useState(true);
 
-    const [isSaving, setIsSaving] = useState(false);
-    const [error, setError] = useState('');
+    const [industryError, setIndustryError] =
+        useState('');
 
     useEffect(() => {
         let isMounted = true;
 
         async function loadIndustries() {
             setIsLoadingIndustries(true);
-            setError('');
+            setIndustryError('');
 
             try {
                 const result = await industryService.getAll();
@@ -84,18 +102,22 @@ export default function NewBusinessPage() {
                     return;
                 }
 
+                setIndustries(
+                    Array.isArray(result) ? result : []
+                );
+
                 if (!Array.isArray(result)) {
-                    throw new Error(
+                    setIndustryError(
                         'The industries response is not an array'
                     );
                 }
-
-                setIndustries(result);
             } catch (error) {
-                if (isMounted) {
-                    setIndustries([]);
-                    setError(getErrorMessage(error));
+                if (!isMounted) {
+                    return;
                 }
+
+                setIndustries([]);
+                setIndustryError(getErrorMessage(error));
             } finally {
                 if (isMounted) {
                     setIsLoadingIndustries(false);
@@ -109,6 +131,48 @@ export default function NewBusinessPage() {
             isMounted = false;
         };
     }, []);
+
+    useEffect(() => {
+        if (!business) {
+            return;
+        }
+
+        setForm({
+            name: toInputValue(business.name),
+            industryId: toInputValue(business.industryId),
+
+            annualRevenue: toInputValue(
+                business.annualRevenue
+            ),
+
+            ebitda: toInputValue(business.ebitda),
+            cash: toInputValue(business.cash),
+
+            interestBearingDebt: toInputValue(
+                business.interestBearingDebt
+            ),
+
+            yearsInBusiness: toInputValue(
+                business.yearsInBusiness
+            ),
+
+            employeeCount: toInputValue(
+                business.employeeCount
+            ),
+
+            revenueGrowthPercent: toInputValue(
+                business.revenueGrowthPercent
+            ),
+
+            recurringRevenuePercent: toInputValue(
+                business.recurringRevenuePercent
+            ),
+
+            largestCustomerRevenuePercent: toInputValue(
+                business.largestCustomerRevenuePercent
+            ),
+        });
+    }, [business]);
 
     function updateField(
         field: keyof BusinessFormState,
@@ -125,16 +189,13 @@ export default function NewBusinessPage() {
     ) {
         event.preventDefault();
 
-        setError('');
-        setIsSaving(true);
-
-        const payload: CreateBusinessPayload = {
+        const payload: UpdateBusinessPayload = {
             name: form.name.trim(),
             industryId: Number(form.industryId),
-
             annualRevenue: Number(form.annualRevenue),
             ebitda: Number(form.ebitda),
             cash: Number(form.cash),
+
             interestBearingDebt: Number(
                 form.interestBearingDebt
             ),
@@ -160,51 +221,47 @@ export default function NewBusinessPage() {
             ),
         };
 
-        const numericValues = [
-            payload.industryId,
-            payload.annualRevenue,
-            payload.ebitda,
-            payload.cash,
-            payload.interestBearingDebt,
-            payload.yearsInBusiness,
-            payload.employeeCount,
-            payload.revenueGrowthPercent,
-            payload.recurringRevenuePercent,
-            payload.largestCustomerRevenuePercent,
-        ];
-
-        if (
-            numericValues.some(
-                (value) => !Number.isFinite(value)
-            )
-        ) {
-            setError('Please enter valid numeric values');
-            setIsSaving(false);
-            return;
-        }
-
         try {
-            await businessService.create(payload);
+            await updateBusiness(payload);
 
             navigate('/dashboard', {
                 replace: true,
             });
-        } catch (error) {
-            setError(getErrorMessage(error));
-        } finally {
-            setIsSaving(false);
+        } catch {
+            // The hook exposes the error through businessError.
         }
     }
+
+    if (!isValidBusinessId) {
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    if (isLoading) {
+        return (
+            <div className="dashboard-status">
+                Loading business…
+            </div>
+        );
+    }
+
+    if (!business) {
+        return (
+            <div className="dashboard-status dashboard-error">
+                {businessError || 'Business not found'}
+            </div>
+        );
+    }
+
+    const error = businessError || industryError;
 
     return (
         <section className="business-form-page">
             <div className="business-form-heading">
                 <div>
-                    <h2>Create a new business</h2>
+                    <h2>Edit {business.name}</h2>
 
                     <p>
-                        Enter the business information to calculate
-                        its initial valuation.
+                        Saving changes will create a new valuation.
                     </p>
                 </div>
 
@@ -461,8 +518,8 @@ export default function NewBusinessPage() {
                         }
                     >
                         {isSaving
-                            ? 'Creating…'
-                            : 'Create business'}
+                            ? 'Saving…'
+                            : 'Save changes'}
                     </button>
                 </div>
             </form>

@@ -55,6 +55,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/businesses_controller').default['show']>>>
     }
   }
+  'businesses.find': {
+    methods: ["GET","HEAD"]
+    pattern: '/business/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/businesses_controller').default['find']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/businesses_controller').default['find']>>>
+    }
+  }
   'businesses.delete': {
     methods: ["GET","HEAD"]
     pattern: '/business/:id/delete'
@@ -105,7 +117,7 @@ export interface Registry {
   }
   'data.industries': {
     methods: ["GET","HEAD"]
-    pattern: '/data/industries'
+    pattern: '/assets/industries'
     types: {
       body: {}
       paramsTuple: []
